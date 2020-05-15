@@ -20,7 +20,11 @@ export class ChatComponent implements OnInit {
   @ViewChild('scrollChat') comment: ElementRef ;
   scrolltop: number = null;
 
-  constructor() { }
+  userId: string;
+
+  constructor() {
+    this.userId = 'id-' + new Date().getTime() + '-' + Math.random().toString(36).substr(2);
+  }
 
   ngOnInit() {
 
@@ -35,7 +39,7 @@ export class ChatComponent implements OnInit {
       this.client.subscribe('/chat/message', e => {
         let message: Message = JSON.parse(e.body) as Message;
         message.date = new Date(message.date);
-        this.message.username = message.username;
+        // this.message.username = message.username;
 
         if(this.message.color && message.type == 'NEW_USER' &&
           this.message.username == message.username){
@@ -53,13 +57,27 @@ export class ChatComponent implements OnInit {
         setTimeout(() => this.isWriting = '', 3000);
       });
 
+      // GET HISTORY OF USER CHAT
+      this.client.subscribe('/chat/history/' + this.userId, e => {
+        let history = JSON.parse(e.body) as Message[];
+        this.messages = history.map(m => {
+          m.date = new Date(m.date);
+          return m;
+        }).reverse();
+      });
+      // NOTIFY TO BROKER,GET MESSAGE
+      this.client.publish({destination: '/app/history', body: this.userId});
+
       this.message.type = 'NEW_USER';
-      this.client.publish({destination:'/app/message', body: JSON.stringify(this.message)});
+      this.client.publish({destination: '/app/message', body: JSON.stringify(this.message)});
+    
     };
 
     this.client.onDisconnect = (frame) => {
       console.log('Disconnected: ' + !this.client.connected + ' : ' + frame);
       this.connected = false;
+      this.message = new Message();
+      this.messages = [];
     };
   }
   connect(){
