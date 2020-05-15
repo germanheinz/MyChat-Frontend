@@ -9,14 +9,20 @@
             </li>
         </ul>
     </div>
-    <div class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="connected"></div>
+    <div class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="connected">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light" *ngFor="let message of messages">
+                {{message.text}}
+            </li>
+        </ul>
+    </div>
 
     <div class="card-footer" *ngIf="connected">
         <form class="form-inline">
             <div class="form-group mx-3">
-                <input type="text" class="form-control" placeholder="Write message.." name="text" style="margin-top: 19px;">
+                <input type="text" class="form-control" placeholder="Write message.." [(ngModel)]="message.text" name="text" style="margin-top: 19px;">
             </div>
-            <button class="btn btn-primary" type="button" style="margin-top: 0px;">Send</button>
+            <button type="submit" class="btn btn-primary" (click)="sendMessage()" style="margin-top: 0px;">Send</button>
         </form>
     </div>
 
