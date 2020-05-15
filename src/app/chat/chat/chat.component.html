@@ -1,28 +1,33 @@
 <div class="card">
     <div class="card-header">
         <ul class="nav nav-pills card-header-pills">
-            <li class="nav-item">
-                <button class="btn btn-success" type="button" (click)="connect()" *ngIf="!connected">Connect</button>
+            <li class="nav-item" *ngIf="!connected">
+                <input type="text" [(ngModel)]="message.username" name="username" class="form-control" placeholder="Username.." style="margin-right: 10px;">
             </li>
-            <li class="nav-item" style="padding-left: 30px;">
-                <button class="btn btn-warning" type="button" (click)="disconnect()" *ngIf="connected">Disconnect</button>
+            <li class="nav-item">
+                <button [disabled]="!message.username" class="btn btn-success" type="button" (click)="connect()" *ngIf="!connected" style="margin-left: 10px;">Connect</button>
+            </li>
+            <li class="nav-item " style="padding-left: 30px; ">
+                <button class="btn btn-warning " type="button " (click)="disconnect() " *ngIf="connected ">Disconnect</button>
             </li>
         </ul>
     </div>
-    <div class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="connected">
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-light" *ngFor="let message of messages">
-                {{message.text}}
+    <div class="card-body " style="overflow-y: scroll; height: 360px; " *ngIf="connected ">
+        <ul class="list-group list-group-flush ">
+            <li class="list-group-item list-group-item-light " *ngFor="let message of messages ">
+
+                <span *ngIf="message.type == 'NEW_USER'">{{message.date | date: 'shortTime'}} - {{message.text | titlecase}}</span>
+                <span *ngIf="message.type == 'NEW_MESSAGE'">{{message.date | date: 'shortTime'}} - {{message.username | titlecase}} say: <br> {{message.text}} </span>
             </li>
         </ul>
     </div>
 
-    <div class="card-footer" *ngIf="connected">
-        <form class="form-inline">
-            <div class="form-group mx-3">
-                <input type="text" class="form-control" placeholder="Write message.." [(ngModel)]="message.text" name="text" style="margin-top: 19px;">
+    <div class="card-footer " *ngIf="connected ">
+        <form class="form-inline ">
+            <div class="form-group mx-3 ">
+                <input type="text " class="form-control " placeholder="Write message.. " [(ngModel)]="message.text " name="text " style="margin-top: 19px; ">
             </div>
-            <button type="submit" class="btn btn-primary" (click)="sendMessage()" style="margin-top: 0px;">Send</button>
+            <button type="submit " class="btn btn-primary " (click)="sendMessage() " style="margin-top: 0px; ">Send</button>
         </form>
     </div>
 

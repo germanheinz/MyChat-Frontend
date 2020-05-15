@@ -1,5 +1,6 @@
 export class Message {
-    text: String = 'test';
+    text: String = '';
     date: Date;
-
+    username: string;
+    type: string;
 }
